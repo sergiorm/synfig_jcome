@@ -1133,6 +1133,10 @@ CanvasView::create_display_bar()
 	toolbar = manage(new class Gtk::Toolbar());
 	Gtk::IconSize iconsize=Gtk::IconSize::from_name("synfig-small_icon_16x16");
 
+	// Menu button
+	Gtk::ToolItem *menu_button = Gtk::manage(new class Gtk::ToolButton("Menu"));
+	menu_button->show();
+
 	// Setup the ToggleDuckDial widget
 	toggleducksdial = Gtk::manage(new class ToggleDucksDial(iconsize));
 
@@ -1312,6 +1316,7 @@ CanvasView::create_display_bar()
 	tool_preview_options_button->show();
 
 	// place the tool buttons and widgets
+	toolbar->append(*menu_button);
 	toolbar->append(*tool_ducksdial);
 	toolbar->append(*tool_sep1);
 	toolbar->append(*tool_resdial);
