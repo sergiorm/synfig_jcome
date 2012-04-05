@@ -75,6 +75,7 @@
 
 #include "duckmatic.h"
 #include <gtkmm/scale.h>
+#include <gtkmm/toolbar.h>
 
 #include <gtkmm/uimanager.h>
 
@@ -264,6 +265,7 @@ private:
 	Gtk::Notebook *notebook; // not used
 	Gtk::Table *timebar;
 	Gtk::Table *displaybar;
+	Gtk::Toolbar *toolbar;
 	Gtk::ToggleButton *animatebutton;
 	Gtk::Button *keyframebutton;
 	Gtk::ToggleButton *pastkeyframebutton;
@@ -285,6 +287,7 @@ private:
 	Gtk::ToggleButton *onion_skin;
 	Gtk::Button *render_options_button;
 	Gtk::Button *preview_options_button;
+
 	bool toggling_show_grid;
 	bool toggling_snap_grid;
 	bool toggling_onion_skin;

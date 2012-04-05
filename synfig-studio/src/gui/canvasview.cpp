@@ -45,6 +45,7 @@
 #include <gtkmm/treemodelsort.h>
 #include <gtkmm/buttonbox.h>
 #include <gtkmm/separator.h>
+#include <gtkmm/toolbar.h>
 
 #include <gtk/gtktreestore.h>
 #include <gtk/gtkversion.h>
@@ -761,7 +762,7 @@ CanvasView::CanvasView(etl::loose_handle<Instance> instance,etl::handle<synfigap
 
 	layout_table->show();
 	add(*layout_table);
-
+	show_all();
 	//set_transient_for(*App::toolbox);
 
 	smach_.set_default_state(&state_normal);
@@ -1129,8 +1130,11 @@ CanvasView::create_status_bar()
 Gtk::Widget*
 CanvasView::create_display_bar()
 {
-	displaybar = manage(new class Gtk::Table(16, 1, false));
+	toolbar = manage(new class Gtk::Toolbar());
+	displaybar = manage(new class Gtk::Table(1, 1, false));
+
 	Gtk::IconSize iconsize=Gtk::IconSize::from_name("synfig-small_icon_16x16");
+
 	// Setup the ToggleDuckDial widget
 	toggleducksdial = Gtk::manage(new class ToggleDucksDial(iconsize));
 
@@ -1155,7 +1159,10 @@ CanvasView::create_display_bar()
 	toggleducksdial->signal_ducks_angle().connect(
 			sigc::bind(sigc::mem_fun(*this, &studio::CanvasView::toggle_duck_mask),Duck::TYPE_ANGLE)
 			);
-	toggleducksdial->show();
+
+	Gtk::ToolItem *tool_ducksdial = Gtk::manage(new class Gtk::ToolItem());
+	tool_ducksdial->add(*toggleducksdial);
+	tool_ducksdial->show();
 
 	// Set up the ResolutionDial widget
 	resolutiondial=Gtk::manage(new class ResolutionDial(iconsize));
@@ -1167,26 +1174,46 @@ CanvasView::create_display_bar()
 			sigc::mem_fun(*this, &studio::CanvasView::increase_low_res_pixel_size));
 	resolutiondial->signal_use_low_resolution().connect(
 			sigc::mem_fun(*this, &studio::CanvasView::toggle_low_res_pixel_flag));
-	resolutiondial->show();
+
+	Gtk::ToolItem *tool_resdial = Gtk::manage(new class Gtk::ToolItem());
+	tool_resdial->add(*resolutiondial);
+	tool_resdial->show();
 
 	// Set up some separators
 	Gtk::VSeparator *separator1 = Gtk::manage(new class Gtk::VSeparator());
-	separator1->show();
+	Gtk::ToolItem *tool_sep1 = Gtk::manage(new class Gtk::ToolItem());
+	tool_sep1->add(*separator1);
+	tool_sep1->show();
+
 	Gtk::VSeparator *separator2 = Gtk::manage(new class Gtk::VSeparator());
-	separator2->show();
+	Gtk::ToolItem *tool_sep2 = Gtk::manage(new class Gtk::ToolItem());
+	tool_sep2->add(*separator2);
+	tool_sep2->show();
+
 	Gtk::VSeparator *separator3 = Gtk::manage(new class Gtk::VSeparator());
-	separator3->show();
+	Gtk::ToolItem *tool_sep3 = Gtk::manage(new class Gtk::ToolItem());
+	tool_sep3->add(*separator3);
+	tool_sep3->show();
+
 	Gtk::VSeparator *separator4 = Gtk::manage(new class Gtk::VSeparator());
-	separator4->show();
+	Gtk::ToolItem *tool_sep4 = Gtk::manage(new class Gtk::ToolItem());
+	tool_sep4->add(*separator4);
+	tool_sep4->show();
+
 	Gtk::VSeparator *separator5 = Gtk::manage(new class Gtk::VSeparator());
-	separator5->show();
+	Gtk::ToolItem *tool_sep5 = Gtk::manage(new class Gtk::ToolItem());
+	tool_sep5->add(*separator5);
+	tool_sep5->show();
 
 	// Set up quality spin button
 	quality_spin=Gtk::manage(new class Gtk::SpinButton(quality_adjustment_));
 	quality_spin->signal_value_changed().connect(
 			sigc::mem_fun(*this, &studio::CanvasView::update_quality));
 	quality_spin->set_tooltip_text( _("Quality (lower is better)"));
-	quality_spin->show();
+
+	Gtk::ToolItem *tool_quaspin = Gtk::manage(new class Gtk::ToolItem());
+	tool_quaspin->add(*quality_spin);
+	tool_quaspin->show();
 
 	// Set up the show grid toggle button
 	show_grid = Gtk::manage(new class Gtk::ToggleButton());
@@ -1199,7 +1226,10 @@ CanvasView::create_display_bar()
 			sigc::mem_fun(*this, &studio::CanvasView::toggle_show_grid));
 	show_grid->set_tooltip_text( _("Show grid when enabled"));
 	show_grid->set_relief(Gtk::RELIEF_NONE);
-	show_grid->show();
+
+	Gtk::ToolItem *tool_show_grid = Gtk::manage(new class Gtk::ToolItem());
+	tool_show_grid->add(*show_grid);
+	tool_show_grid->show();
 
 	// Set up the snap to grid toggle button
 	snap_grid = Gtk::manage(new class Gtk::ToggleButton());
@@ -1212,7 +1242,10 @@ CanvasView::create_display_bar()
 			sigc::mem_fun(*this, &studio::CanvasView::toggle_snap_grid));
 	snap_grid->set_tooltip_text( _("Show grid when enabled"));
 	snap_grid->set_relief(Gtk::RELIEF_NONE);
-	snap_grid->show();
+
+	Gtk::ToolItem *tool_snap_grid = Gtk::manage(new class Gtk::ToolItem());
+	tool_snap_grid->add(*snap_grid);
+	tool_snap_grid->show();
 
 	// Set up the onion skin toggle button
 	onion_skin = Gtk::manage(new class Gtk::ToggleButton());
@@ -1225,21 +1258,30 @@ CanvasView::create_display_bar()
 			sigc::mem_fun(*this, &studio::CanvasView::toggle_onion_skin));
 	onion_skin->set_tooltip_text( _("Shows onion skin when enabled"));
 	onion_skin->set_relief(Gtk::RELIEF_NONE);
-	onion_skin->show();
+
+	Gtk::ToolItem *tool_onion_skin = Gtk::manage(new class Gtk::ToolItem());
+	tool_onion_skin->add(*onion_skin);
+	tool_onion_skin->show();
 
 	// Set up past onion skin spin button
 	past_onion_spin=Gtk::manage(new class Gtk::SpinButton(past_onion_adjustment_));
 	past_onion_spin->signal_value_changed().connect(
 			sigc::mem_fun(*this, &studio::CanvasView::set_onion_skins));
 	past_onion_spin->set_tooltip_text( _("Past onion skins"));
-	past_onion_spin->show();
+
+	Gtk::ToolItem *tool_past_onion_spin = Gtk::manage(new class Gtk::ToolItem());
+	tool_past_onion_spin->add(*past_onion_spin);
+	tool_past_onion_spin->show();
 
 	// Set up future onion skin spin button
 	future_onion_spin=Gtk::manage(new class Gtk::SpinButton(future_onion_adjustment_));
 	future_onion_spin->signal_value_changed().connect(
 			sigc::mem_fun(*this, &studio::CanvasView::set_onion_skins));
 	future_onion_spin->set_tooltip_text( _("Future onion skins"));
-	future_onion_spin->show();
+
+	Gtk::ToolItem *tool_future_onion_spin = Gtk::manage(new class Gtk::ToolItem());
+	tool_future_onion_spin->add(*future_onion_spin);
+	tool_future_onion_spin->show();
 
 	// Setup render options dialog button
 	render_options_button = Gtk::manage(new class Gtk::Button());
@@ -1251,7 +1293,10 @@ CanvasView::create_display_bar()
 			sigc::mem_fun0(render_settings,&studio::RenderSettings::present));
 	render_options_button->set_tooltip_text( _("Shows the Render Settings Dialog"));
 	render_options_button->set_relief(Gtk::RELIEF_NONE);
-	render_options_button->show();
+
+	Gtk::ToolItem *tool_render_options_button = Gtk::manage(new class Gtk::ToolItem());
+	tool_render_options_button->add(*render_options_button);
+	tool_render_options_button->show();
 
 	// Setup preview options dialog button
 	preview_options_button = Gtk::manage(new class Gtk::Button());
@@ -1263,29 +1308,31 @@ CanvasView::create_display_bar()
 			sigc::mem_fun(*this,&CanvasView::on_preview_option));
 	preview_options_button->set_tooltip_text( _("Shows the Preview Settings Dialog"));
 	preview_options_button->set_relief(Gtk::RELIEF_NONE);
-	preview_options_button->show();
 
+	Gtk::ToolItem *tool_preview_options_button = Gtk::manage(new class Gtk::ToolItem());
+	tool_preview_options_button->add(*preview_options_button);
+	tool_preview_options_button->show();
 
-	displaybar->attach(*toggleducksdial, 0, 1, 0, 1, Gtk::SHRINK, Gtk::SHRINK);
-	displaybar->attach(*separator1, 1, 2, 0, 1, Gtk::FILL, Gtk::FILL, 8);
-	displaybar->attach(*resolutiondial, 2, 3, 0, 1, Gtk::SHRINK, Gtk::SHRINK);
-	displaybar->attach(*separator2, 3, 4, 0, 1, Gtk::FILL, Gtk::FILL, 8);
-	displaybar->attach(*quality_spin, 4, 5, 0, 1, Gtk::SHRINK, Gtk::SHRINK);
-	displaybar->attach(*separator3, 5, 6, 0, 1, Gtk::FILL, Gtk::FILL, 8);
-	displaybar->attach(*show_grid, 6, 7, 0, 1, Gtk::SHRINK, Gtk::SHRINK);
-	displaybar->attach(*snap_grid, 7, 8, 0, 1, Gtk::SHRINK, Gtk::SHRINK);
-	displaybar->attach(*separator4, 8, 9, 0, 1, Gtk::FILL, Gtk::FILL, 8);
-	displaybar->attach(*past_onion_spin, 9, 10, 0, 1, Gtk::SHRINK, Gtk::SHRINK);
-	displaybar->attach(*onion_skin, 10, 11, 0, 1, Gtk::SHRINK, Gtk::SHRINK);
-	displaybar->attach(*future_onion_spin, 11, 12, 0, 1, Gtk::SHRINK, Gtk::SHRINK);
-	displaybar->attach(*separator5, 12, 13, 0, 1, Gtk::FILL, Gtk::FILL, 8);
-	displaybar->attach(*render_options_button, 13, 14, 0, 1, Gtk::SHRINK, Gtk::SHRINK);
-	displaybar->attach(*preview_options_button, 14, 15, 0, 1, Gtk::SHRINK, Gtk::SHRINK);
+	// place the tool buttons and widgets
+	toolbar->append(*tool_ducksdial);
+	toolbar->append(*tool_sep1);
+	toolbar->append(*tool_resdial);
+	toolbar->append(*tool_sep2);
+	toolbar->append(*tool_quaspin);
+	toolbar->append(*tool_sep3);
+	toolbar->append(*tool_show_grid);
+	toolbar->append(*tool_snap_grid);
+	toolbar->append(*tool_sep4);
+	toolbar->append(*tool_onion_skin);
+	toolbar->append(*tool_past_onion_spin);
+	toolbar->append(*tool_future_onion_spin);
+	toolbar->append(*tool_sep5);
+	toolbar->append(*tool_render_options_button);
+	toolbar->append(*tool_preview_options_button);
 
-	displaybar->show();
+	toolbar->show_all();
 
-	return displaybar;
-
+	return toolbar;
 }
 
 void
