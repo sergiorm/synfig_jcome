@@ -1131,8 +1131,6 @@ Gtk::Widget*
 CanvasView::create_display_bar()
 {
 	toolbar = manage(new class Gtk::Toolbar());
-	displaybar = manage(new class Gtk::Table(1, 1, false));
-
 	Gtk::IconSize iconsize=Gtk::IconSize::from_name("synfig-small_icon_16x16");
 
 	// Setup the ToggleDuckDial widget
