@@ -282,11 +282,18 @@ private:
 	Gtk::SpinButton *past_onion_spin;
 	Gtk::SpinButton *future_onion_spin;
 	bool updating_quality_;
-	Gtk::ToggleButton *show_grid;
-	Gtk::ToggleButton *snap_grid;
-	Gtk::ToggleButton *onion_skin;
-	Gtk::Button *render_options_button;
-	Gtk::Button *preview_options_button;
+
+	Gtk::ToggleToolButton *position_ducks;
+	Gtk::ToggleToolButton *vertex_ducks;
+	Gtk::ToggleToolButton *tangent_ducks;
+	Gtk::ToggleToolButton *radius_ducks;
+	Gtk::ToggleToolButton *width_ducks;
+	Gtk::ToggleToolButton *angle_ducks;
+	Gtk::ToggleToolButton *show_grid;
+	Gtk::ToggleToolButton *snap_grid;
+	Gtk::ToggleToolButton *onion_skin;
+	Gtk::ToolButton *tool_render_button;
+	Gtk::ToolButton *tool_preview_button;
 
 	bool toggling_show_grid;
 	bool toggling_snap_grid;
@@ -378,6 +385,33 @@ public:
 	int working_depth;
 
 	bool cancel;
+
+	void update_ducks_toggles(Duck::Type mask);
+
+	Glib::SignalProxy0<void> signal_position_ducks(){
+		return position_ducks->signal_toggled(); 
+	}
+
+	Glib::SignalProxy0<void> signal_vertex_ducks(){
+		return vertex_ducks->signal_toggled();
+	}
+
+	Glib::SignalProxy0<void> signal_tangent_ducks(){
+		return tangent_ducks->signal_toggled();
+	}
+
+	Glib::SignalProxy0<void> signal_radius_ducks(){
+		return radius_ducks->signal_toggled();
+	}
+
+	Glib::SignalProxy0<void> signal_width_ducks(){
+		return width_ducks->signal_toggled();
+	}
+
+	Glib::SignalProxy0<void> signal_angle_ducks(){
+		return angle_ducks->signal_toggled();
+	}
+
 
 	/*
  -- ** -- D I A L O G S -------------------------------------------------------

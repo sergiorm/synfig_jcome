@@ -32,7 +32,7 @@
 
 #include <gtkmm/tooltip.h>
 #include <gtkmm/table.h>
-#include <gtkmm/togglebutton.h>
+#include <gtkmm/toolbar.h>
 #include "duckmatic.h"
 
 #include "general.h"
@@ -49,18 +49,18 @@ namespace studio
 
 class ToggleDucksDial : public Gtk::Table
 {
-	Gtk::ToggleButton *ducks_position;
-	Gtk::ToggleButton *ducks_vertex;
-	Gtk::ToggleButton *ducks_tangent;
-	Gtk::ToggleButton *ducks_radius;
-	Gtk::ToggleButton *ducks_width;
-	Gtk::ToggleButton *ducks_angle;
+	Gtk::ToggleToolButton *ducks_position;
+	Gtk::ToggleToolButton *ducks_vertex;
+	Gtk::ToggleToolButton *ducks_tangent;
+	Gtk::ToggleToolButton *ducks_radius;
+	Gtk::ToggleToolButton *ducks_width;
+	Gtk::ToggleToolButton *ducks_angle;
 
-	Gtk::ToggleButton *create_label_button(Gtk::IconSize iconsize, const char * stockid, const char * tooltip);
+	Gtk::ToggleToolButton *create_label_button(const char *stockid, const char *label, const char *tooltip);
 
 public:
 
-	ToggleDucksDial(Gtk::IconSize & size);
+	ToggleDucksDial();
 	void update_toggles(Duck::Type mask);
 	Glib::SignalProxy0<void> signal_ducks_position()  { return ducks_position->signal_toggled(); }
 	Glib::SignalProxy0<void> signal_ducks_vertex()    { return ducks_vertex->  signal_toggled(); }
