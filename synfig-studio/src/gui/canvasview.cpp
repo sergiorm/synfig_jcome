@@ -1131,6 +1131,7 @@ Gtk::Widget*
 CanvasView::create_display_bar()
 {
 	toolbar = manage(new class Gtk::Toolbar());
+	toolbar->set_toolbar_style(Gtk::TOOLBAR_ICONS);
 	Gtk::IconSize iconsize=Gtk::IconSize::from_name("synfig-small_icon_16x16");
 
 	// Menu button
