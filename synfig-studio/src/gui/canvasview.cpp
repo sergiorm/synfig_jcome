@@ -1256,7 +1256,7 @@ CanvasView::create_display_bar()
 	onion_skin->set_active(work_area->get_onion_skin());
 	onion_skin->signal_toggled().connect(
 			sigc::mem_fun(*this, &studio::CanvasView::toggle_onion_skin));
-	onion_skin->set_label("Onion skip");
+	onion_skin->set_label("Onion Skin");
 	onion_skin->set_tooltip_text( _("Shows onion skin when enabled"));
 
 	// Set up past onion skin spin button
