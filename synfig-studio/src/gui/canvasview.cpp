@@ -1136,8 +1136,10 @@ CanvasView::create_display_bar()
 	Gtk::IconSize iconsize=Gtk::IconSize::from_name("synfig-small_icon_16x16");
 
 	// Menu button
-	Gtk::ToolItem *menu_button = Gtk::manage(new class Gtk::ToolButton("Menu"));
+	Gtk::ToolButton *menu_button = Gtk::manage(new class Gtk::ToolButton("Menu"));
 	menu_button->show();
+	menu_button->signal_clicked().connect(
+		sigc::mem_fun(*this, &CanvasView::popup_main_menu));
 
 	// Switch ducks show or not on canvas
 	// Position ducks
