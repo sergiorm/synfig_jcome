@@ -46,6 +46,7 @@
 #include <gtkmm/buttonbox.h>
 #include <gtkmm/separator.h>
 #include <gtkmm/toolbar.h>
+#include <gtkmm/separatortoolitem.h>
 
 #include <gtk/gtktreestore.h>
 #include <gtk/gtkversion.h>
@@ -1209,30 +1210,17 @@ CanvasView::create_display_bar()
 	tool_resdial->show();
 
 	// Set up some separators
-	Gtk::VSeparator *separator1 = Gtk::manage(new class Gtk::VSeparator());
-	Gtk::ToolItem *tool_sep1 = Gtk::manage(new class Gtk::ToolItem());
-	tool_sep1->add(*separator1);
+	Gtk::SeparatorToolItem *tool_sep1 = Gtk::manage(new class Gtk::SeparatorToolItem());
 	tool_sep1->show();
-
-	Gtk::VSeparator *separator2 = Gtk::manage(new class Gtk::VSeparator());
-	Gtk::ToolItem *tool_sep2 = Gtk::manage(new class Gtk::ToolItem());
-	tool_sep2->add(*separator2);
+	Gtk::SeparatorToolItem *tool_sep2 = Gtk::manage(new class Gtk::SeparatorToolItem());
 	tool_sep2->show();
-
-	Gtk::VSeparator *separator3 = Gtk::manage(new class Gtk::VSeparator());
-	Gtk::ToolItem *tool_sep3 = Gtk::manage(new class Gtk::ToolItem());
-	tool_sep3->add(*separator3);
+	Gtk::SeparatorToolItem *tool_sep3 = Gtk::manage(new class Gtk::SeparatorToolItem());
 	tool_sep3->show();
-
-	Gtk::VSeparator *separator4 = Gtk::manage(new class Gtk::VSeparator());
-	Gtk::ToolItem *tool_sep4 = Gtk::manage(new class Gtk::ToolItem());
-	tool_sep4->add(*separator4);
+	Gtk::SeparatorToolItem *tool_sep4 = Gtk::manage(new class Gtk::SeparatorToolItem());
 	tool_sep4->show();
-
-	Gtk::VSeparator *separator5 = Gtk::manage(new class Gtk::VSeparator());
-	Gtk::ToolItem *tool_sep5 = Gtk::manage(new class Gtk::ToolItem());
-	tool_sep5->add(*separator5);
+	Gtk::SeparatorToolItem *tool_sep5 = Gtk::manage(new class Gtk::SeparatorToolItem());
 	tool_sep5->show();
+
 
 	// Set up quality spin button
 	quality_spin=Gtk::manage(new class Gtk::SpinButton(quality_adjustment_));
