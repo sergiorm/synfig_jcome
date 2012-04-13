@@ -3887,8 +3887,8 @@ CanvasView::on_preview_option()
 		if(r.get_frame_rate())
 		{
 			float rate = 1/r.get_frame_rate();
-			float beg = r.get_time_start(); //+ r.get_frame_start()*rate;
-			float end = r.get_time_end();// + r.get_frame_end()*rate;
+			float beg = r.get_time_start(); 
+			float end = r.get_time_end();
 
 			if(!po)
 			{
