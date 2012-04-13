@@ -3887,8 +3887,8 @@ CanvasView::on_preview_option()
 		if(r.get_frame_rate())
 		{
 			float rate = 1/r.get_frame_rate();
-			float beg = r.get_time_start() + r.get_frame_start()*rate;
-			float end = r.get_time_start() + r.get_frame_end()*rate;
+			float beg = r.get_time_start(); //+ r.get_frame_start()*rate;
+			float end = r.get_time_end();// + r.get_frame_end()*rate;
 
 			if(!po)
 			{
@@ -3902,12 +3902,12 @@ CanvasView::on_preview_option()
 
 				set_ext_widget("prevoptions",po);
 			}
-			/*po->set_zoom(work_area->get_zoom()/2);
-			po->set_fps(r.get_frame_rate()/2);
-			po->set_begintime(beg);
-			po->set_begin_override(false);
-			po->set_endtime(end);
-			po->set_end_override(false);*/
+
+			else
+			{
+				if (!po->get_begin_override()) po->set_begintime(beg);
+				if (!po->get_end_override()) po->set_endtime(end);
+			}
 
 			po->set_global_fps(r.get_frame_rate());
 			po->signal_finish().connect(sigc::mem_fun(*this,&CanvasView::on_preview_create));
