@@ -3944,8 +3944,10 @@ CanvasView::on_preview_create(const PreviewInfo &info)
 	Canvas::Handle  canv = get_canvas();
 	int w = canv->rend_desc().get_w() + 20;
 	int h = canv->rend_desc().get_h() + 90;
+	string t = canv->get_name() + _(" (Preview)");
 
 	pd->set_default_size(w, h);
+	pd->set_title(t);
 	pd->set_preview(prev.get());
 	pd->present();
 }
