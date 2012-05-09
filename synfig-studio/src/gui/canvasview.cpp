@@ -3935,20 +3935,21 @@ CanvasView::on_preview_create(const PreviewInfo &info)
 	prev->set_endtime(info.endtime);
 	prev->set_quality(work_area->get_quality());
 
-	//render it out...
+	// render it out...
 	prev->render();
 
 	Dialog_Preview *pd = preview_dialog.get();
 	assert(pd);
 
 	Canvas::Handle  canv = get_canvas();
-//	canv->rend_desc().get_w()	
-//	canv->rend_desc().get_h()	
+	int w = canv->rend_desc().get_w() + 20;
+	int h = canv->rend_desc().get_h() + 90;
 
-	pd->set_default_size(canv->rend_desc().get_w() + 20, canv->rend_desc().get_h() + 90);
+	pd->set_default_size(w, h);
 	pd->set_preview(prev.get());
 	pd->present();
 }
+
 
 void
 CanvasView::on_audio_option()
