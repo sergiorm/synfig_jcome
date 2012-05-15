@@ -44,6 +44,7 @@
 #include <gdkmm/pixbuf.h>
 #include <gdkmm/cursor.h>
 #include <gdkmm/device.h>
+#include <gtkmm/scrollbar.h>
 
 #include <synfig/time.h>
 #include <synfig/vector.h>
@@ -153,8 +154,6 @@ private:
 	Gtk::DrawingArea *drawing_area;
 	Gtk::Adjustment scrollx_adjustment;
 	Gtk::Adjustment scrolly_adjustment;
-	Gtk::VRuler *vruler;
-	Gtk::HRuler *hruler;
 	Gtk::Button *menubutton;
 	Gtk::Frame *drawing_frame;
 
@@ -294,6 +293,12 @@ public:
 
 	// used in renderer_timecode.cpp
 	int timecode_width, timecode_height;
+
+	Gtk::VRuler *vruler;
+	Gtk::HRuler *hruler;
+	Gtk::VScrollbar *vscrollbar1;
+	Gtk::HScrollbar *hscrollbar1;
+
 
 	/*
  -- ** -- P R I V A T E   M E T H O D S ---------------------------------------

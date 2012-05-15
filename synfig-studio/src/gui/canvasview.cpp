@@ -824,24 +824,45 @@ CanvasView::CanvasView(etl::loose_handle<Instance> instance,etl::handle<synfigap
 	/*! \todo In other words, this is a zoom-to-fit, and should be
 	** in its own function.
 	*/
-	int w=get_canvas()->rend_desc().get_w()+70;
-	int h=get_canvas()->rend_desc().get_h()+70;
-	while(w>700 || h>600)
+
+	int w = work_area->vruler->size_request().width
+			+ work_area->vscrollbar1->size_request().width;
+	int h = displaybar->size_request().height
+			+ work_area->hruler->size_request().height
+			+ work_area->hscrollbar1->size_request().height
+			+ timebar->size_request().height
+			+ framedial->size_request().height
+			+ statusbar->size_request().height;
+
+	w = (get_canvas()->rend_desc().get_w() + w) / 0.990;
+	h =	(get_canvas()->rend_desc().get_h() + h) / 0.995;
+		// 0.995 is factor of zoom to fit from studio::WorkArea::zoom_fit()
+
+	// Maximum size of canvas window
+	Glib::RefPtr<Gdk::Display> display(Gdk::Display::get_default());
+	Glib::RefPtr<const Gdk::Screen> screen(display->get_default_screen());
+	int ws = screen->get_width();
+	int hs = screen->get_height();
+/*
+	while (w >  ws || h > hs)
 	{
 		// Minor hack:
-		//   zoom_out() =>
-		//	   WorkArea::async_update_preview() =>
-		//	     WorkArea::set_zoom(float) =>
-		//		   WorkArea::async_update_preview() =>
-		//			 desc.set_time(cur_time), where cur_time isn't initialized
-		work_area->set_time(0);
-		work_area->zoom_out();
-		w=round_to_int(get_canvas()->rend_desc().get_w()*work_area->get_zoom()+70);
-		h=round_to_int(get_canvas()->rend_desc().get_h()*work_area->get_zoom()+70);
+		// zoom_out() =>
+		// WorkArea::async_update_preview() =>
+		// WorkArea::set_zoom(float) =>
+		// WorkArea::async_update_preview() =>
+		// desc.set_time(cur_time), where cur_time isn't initialized
+		work_area->set_time(8);
+	//	w = round_to_int(get_canvas()->rend_desc().get_w()
+	//		* work_area->get_zoom() + w0);
+	//	h = round_to_int(get_canvas()->rend_desc().get_h()
+	//		* work_area->get_zoom() + h0);
+		w = ws;
 	}
-	if(w>700)w=700;
-	if(h>600)h=600;
-	set_default_size(w,h);
+*/
+	if (w > ws) w = ws;
+	if (h > hs) h = hs;
+	set_default_size(w, h);
 	property_window_position().set_value(Gtk::WIN_POS_NONE);
 
 	std::list<Gtk::TargetEntry> listTargets;

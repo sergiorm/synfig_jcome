@@ -764,8 +764,8 @@ WorkArea::WorkArea(etl::loose_handle<synfigapp::CanvasInterface> canvas_interfac
 
 	Gtk::HBox *hbox = manage(new class Gtk::HBox(false, 0));
 
-	Gtk::VScrollbar *vscrollbar1 = manage(new class Gtk::VScrollbar(*get_scrolly_adjustment()));
-	Gtk::HScrollbar *hscrollbar1 = manage(new class Gtk::HScrollbar(*get_scrollx_adjustment()));
+	vscrollbar1 = manage(new class Gtk::VScrollbar(*get_scrolly_adjustment()));
+	hscrollbar1 = manage(new class Gtk::HScrollbar(*get_scrollx_adjustment()));
 	vscrollbar1->show();
 	attach(*vscrollbar1, 2, 3, 1, 2, Gtk::FILL, Gtk::EXPAND|Gtk::FILL, 0, 0);
 
