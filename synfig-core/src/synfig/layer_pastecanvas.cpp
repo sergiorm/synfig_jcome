@@ -138,7 +138,7 @@ Layer_PasteCanvas::get_param_vocab()const
 		.set_description(_("Canvas to paste"))
 	);
 	ret.push_back(ParamDesc("zoom")
-		.set_local_name(_("Zoom"))
+		.set_local_name(_("Scale"))
 		.set_description(_("Size of canvas"))
 	);
 
