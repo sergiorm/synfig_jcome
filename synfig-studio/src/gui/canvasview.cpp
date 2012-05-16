@@ -3109,8 +3109,8 @@ CanvasView::decrease_low_res_pixel_size()
 			break;
 		}
 	// Update the "toggle-low-res" action
-	Glib::RefPtr<Gtk::ToggleAction> action = Glib::RefPtr<Gtk::ToggleAction>:
-		:cast_dynamic(action_group->get_action("toggle-low-res"));
+	Glib::RefPtr<Gtk::ToggleAction> action = Glib::RefPtr<Gtk::ToggleAction>::\
+		cast_dynamic(action_group->get_action("toggle-low-res"));
 	action->set_active(work_area->get_low_resolution_flag());
 	// Update toggle low res button
 	lowres_update(work_area->get_low_resolution_flag());
@@ -3131,8 +3131,8 @@ CanvasView::increase_low_res_pixel_size()
 		// We were using "hi res" so change it to low res.
 		work_area->set_low_resolution_flag(true);
 		// Update the "toggle-low-res" action
-		Glib::RefPtr<Gtk::ToggleAction> action = Glib::RefPtr<Gtk:
-			:ToggleAction>::cast_dynamic(action_group->get_action(
+		Glib::RefPtr<Gtk::ToggleAction> action = Glib::RefPtr<Gtk::\
+			ToggleAction>::cast_dynamic(action_group->get_action(
 				"toggle-low-res"));
 		action->set_active(true);
 		// Update the toggle low res button
@@ -3156,8 +3156,8 @@ CanvasView::increase_low_res_pixel_size()
 			break;
 		}
 	// Update the "toggle-low-res" action
-	Glib::RefPtr<Gtk::ToggleAction> action = Glib::RefPtr<Gtk::ToggleAction>:
-		:cast_dynamic(action_group->get_action("toggle-low-res"));
+	Glib::RefPtr<Gtk::ToggleAction> action = Glib::RefPtr<Gtk::ToggleAction>::\
+		cast_dynamic(action_group->get_action("toggle-low-res"));
 	action->set_active(work_area->get_low_resolution_flag());
 	// Update toggle low res button
 	lowres_update(work_area->get_low_resolution_flag());
@@ -3175,8 +3175,8 @@ CanvasView::toggle_low_res_pixel_flag()
 	// Update the toggle low res button
 	lowres_update(work_area->get_low_resolution_flag());
 	// Update the "toggle-low-res" action
-	Glib::RefPtr<Gtk::ToggleAction> action = Glib::RefPtr<Gtk::ToggleAction>:
-		:cast_dynamic(action_group->get_action("toggle-low-res"));
+	Glib::RefPtr<Gtk::ToggleAction> action = Glib::RefPtr<Gtk::ToggleAction>::\
+		cast_dynamic(action_group->get_action("toggle-low-res"));
 	action->set_active(work_area->get_low_resolution_flag());
 	changing_resolution_= false;
 }
