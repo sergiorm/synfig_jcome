@@ -1196,33 +1196,45 @@ CanvasView::create_display_bar()
 	angle_ducks->set_label("Angle Ducks");
 	angle_ducks->set_tooltip_text( _("Show angle ducks"));
 
-	// Set up the ResolutionDial widget
-	resolutiondial=Gtk::manage(new class ResolutionDial(iconsize));
+	// Setup low resolution widgets
+	// Setup use lowres button
+	use_lowres = Gtk::manage(new class Gtk::ToggleToolButton(
+		Gtk::StockID("synfig-decrease_resolution")));
+	use_lowres->signal_toggled().connect(
+		sigc::mem_fun(*this,
+			&studio::CanvasView::toggle_low_res_pixel_flag));
+	use_lowres->set_label("Use Low Resolution");
+	use_lowres->set_tooltip_text( _("Use low display resolution"));
 
-	resolutiondial->update_lowres(work_area->get_low_resolution_flag());
-	resolutiondial->signal_increase_resolution().connect(
-		sigc::mem_fun(*this, &studio::CanvasView::decrease_low_res_pixel_size));
-	resolutiondial->signal_decrease_resolution().connect(
+	lowres_update(work_area->get_low_resolution_flag());
+
+	// Setup descrease resolution button
+	decrease_res = Gtk::manage(new class Gtk::ToolButton(
+		Gtk::StockID("synfig-decrease_resolution")));
+	decrease_res->signal_clicked().connect(
 		sigc::mem_fun(*this, &studio::CanvasView::increase_low_res_pixel_size));
-	resolutiondial->signal_use_low_resolution().connect(
-		sigc::mem_fun(*this, &studio::CanvasView::toggle_low_res_pixel_flag));
+	decrease_res->set_label( _("Descrease Display Resolution"));
+	decrease_res->set_tooltip_text( _("Descrease display resolution"));
 
-	Gtk::ToolItem *tool_resdial = Gtk::manage(new class Gtk::ToolItem());
-	tool_resdial->add(*resolutiondial);
-	tool_resdial->show();
+	// Setup inscrease resolution button
+	increase_res = Gtk::manage(new class Gtk::ToolButton(
+		Gtk::StockID("synfig-increase_resolution")));
+	increase_res->signal_clicked().connect(
+		sigc::mem_fun(*this, &studio::CanvasView::decrease_low_res_pixel_size));
+	increase_res->set_label( _("Increase Display Resolution"));
+	increase_res->set_tooltip_text( _("Increase display resolution"));
 
 	// Set up some separators
-	Gtk::SeparatorToolItem *tool_sep1 = Gtk::manage(new class Gtk::SeparatorToolItem());
-	tool_sep1->show();
-	Gtk::SeparatorToolItem *tool_sep2 = Gtk::manage(new class Gtk::SeparatorToolItem());
-	tool_sep2->show();
-	Gtk::SeparatorToolItem *tool_sep3 = Gtk::manage(new class Gtk::SeparatorToolItem());
-	tool_sep3->show();
-	Gtk::SeparatorToolItem *tool_sep4 = Gtk::manage(new class Gtk::SeparatorToolItem());
-	tool_sep4->show();
-	Gtk::SeparatorToolItem *tool_sep5 = Gtk::manage(new class Gtk::SeparatorToolItem());
-	tool_sep5->show();
-
+	Gtk::SeparatorToolItem *sep1 = Gtk::manage(new class Gtk::SeparatorToolItem());
+	sep1->show();
+	Gtk::SeparatorToolItem *sep2 = Gtk::manage(new class Gtk::SeparatorToolItem());
+	sep2->show();
+	Gtk::SeparatorToolItem *sep3 = Gtk::manage(new class Gtk::SeparatorToolItem());
+	sep3->show();
+	Gtk::SeparatorToolItem *sep4 = Gtk::manage(new class Gtk::SeparatorToolItem());
+	sep4->show();
+	Gtk::SeparatorToolItem *sep5 = Gtk::manage(new class Gtk::SeparatorToolItem());
+	sep5->show();
 
 	// Set up quality spin button
 	quality_spin=Gtk::manage(new class Gtk::SpinButton(quality_adjustment_));
@@ -1267,9 +1279,9 @@ CanvasView::create_display_bar()
 			sigc::mem_fun(*this, &studio::CanvasView::set_onion_skins));
 	past_onion_spin->set_tooltip_text( _("Past onion skins"));
 
-	Gtk::ToolItem *tool_past_onion_spin = Gtk::manage(new class Gtk::ToolItem());
-	tool_past_onion_spin->add(*past_onion_spin);
-	tool_past_onion_spin->show();
+	Gtk::ToolItem *ti_past_onion_spin = Gtk::manage(new class Gtk::ToolItem());
+	ti_past_onion_spin->add(*past_onion_spin);
+	ti_past_onion_spin->show();
 
 	// Set up future onion skin spin button
 	future_onion_spin=Gtk::manage(new class Gtk::SpinButton(future_onion_adjustment_));
@@ -1277,25 +1289,25 @@ CanvasView::create_display_bar()
 			sigc::mem_fun(*this, &studio::CanvasView::set_onion_skins));
 	future_onion_spin->set_tooltip_text( _("Future onion skins"));
 
-	Gtk::ToolItem *tool_future_onion_spin = Gtk::manage(new class Gtk::ToolItem());
-	tool_future_onion_spin->add(*future_onion_spin);
-	tool_future_onion_spin->show();
+	Gtk::ToolItem *ti_future_onion_spin = Gtk::manage(new class Gtk::ToolItem());
+	ti_future_onion_spin->add(*future_onion_spin);
+	ti_future_onion_spin->show();
 
 	// Setup render options dialog button
-	tool_render_button = Gtk::manage(new class Gtk::ToolButton(
+	render = Gtk::manage(new class Gtk::ToolButton(
 		Gtk::StockID("synfig-render_options")));
-	tool_render_button->signal_clicked().connect(
+	render->signal_clicked().connect(
 			sigc::mem_fun0(render_settings,&studio::RenderSettings::present));
-	tool_render_button->set_label( _("Render"));
-	tool_render_button->set_tooltip_text( _("Render animation"));
+	render->set_label( _("Render"));
+	render->set_tooltip_text( _("Render animation"));
 
 	// Setup preview options dialog button
-	tool_preview_button = Gtk::manage(new class Gtk::ToolButton(
+	preview = Gtk::manage(new class Gtk::ToolButton(
 		Gtk::StockID("synfig-preview_options")));
-	tool_preview_button->set_label( _("Preview"));
-	tool_preview_button->signal_clicked().connect(
+	preview->set_label( _("Preview"));
+	preview->signal_clicked().connect(
 			sigc::mem_fun(*this,&CanvasView::on_preview_option));
-	tool_preview_button->set_tooltip_text( _("Preview animation"));
+	preview->set_tooltip_text( _("Preview animation"));
 
 	// place the tool buttons and widgets
 	toolbar->append(*menu_button);
@@ -1305,25 +1317,28 @@ CanvasView::create_display_bar()
 	toolbar->append(*vertex_ducks);
 	toolbar->append(*tangent_ducks);
 	toolbar->append(*angle_ducks);
-	toolbar->append(*tool_sep1);
-	toolbar->append(*tool_resdial);
-	toolbar->append(*tool_sep2);
+	toolbar->append(*sep1);
+	toolbar->append(*use_lowres);
+	toolbar->append(*decrease_res);
+	toolbar->append(*increase_res);
+	toolbar->append(*sep2);
 	toolbar->append(*tool_quaspin);
-	toolbar->append(*tool_sep3);
+	toolbar->append(*sep3);
 	toolbar->append(*show_grid);
 	toolbar->append(*snap_grid);
-	toolbar->append(*tool_sep4);
+	toolbar->append(*sep4);
 	toolbar->append(*onion_skin);
-	toolbar->append(*tool_past_onion_spin);
-	toolbar->append(*tool_future_onion_spin);
-	toolbar->append(*tool_sep5);
-	toolbar->append(*tool_render_button);
-	toolbar->append(*tool_preview_button);
+	toolbar->append(*ti_past_onion_spin);
+	toolbar->append(*ti_future_onion_spin);
+	toolbar->append(*sep5);
+	toolbar->append(*render);
+	toolbar->append(*preview);
 
 	toolbar->show_all();
 
 	return toolbar;
 }
+
 
 void
 CanvasView::on_current_time_widget_changed()
@@ -3070,40 +3085,45 @@ CanvasView::rebuild_ducks()
 void
 CanvasView::decrease_low_res_pixel_size()
 {
-	if(changing_resolution_)
+	if (changing_resolution_)
 		return;
-	changing_resolution_=true;
+	changing_resolution_= true;
 	list<int> sizes = CanvasView::get_pixel_sizes();
 	int pixel_size = work_area->get_low_res_pixel_size();
 	for (list<int>::iterator iter = sizes.begin(); iter != sizes.end(); iter++)
 		if (*iter == pixel_size)
 		{
 			if (iter == sizes.begin())
-				// we already have the smallest low-res pixels possible - turn off low-res instead
+				// we already have the smallest low-res pixels
+				// possible - turn off low-res instead
 				work_area->set_low_resolution_flag(false);
 			else
 			{
 				iter--;
-				Glib::RefPtr<Gtk::Action> action = action_group->get_action(strprintf("lowres-pixel-%d", *iter));
-				action->activate(); // to make sure the radiobutton in the menu is updated too
+				Glib::RefPtr<Gtk::Action> action = action_group->get_action(
+					strprintf("lowres-pixel-%d", *iter));
+				action->activate();
+					// to make sure the radiobutton in the menu is updated too
 				work_area->set_low_resolution_flag(true);
 			}
 			break;
 		}
 	// Update the "toggle-low-res" action
-	Glib::RefPtr<Gtk::ToggleAction> action = Glib::RefPtr<Gtk::ToggleAction>::cast_dynamic(action_group->get_action("toggle-low-res"));
+	Glib::RefPtr<Gtk::ToggleAction> action = Glib::RefPtr<Gtk::ToggleAction>:
+		:cast_dynamic(action_group->get_action("toggle-low-res"));
 	action->set_active(work_area->get_low_resolution_flag());
 	// Update toggle low res button
-	resolutiondial->update_lowres(work_area->get_low_resolution_flag());
-	changing_resolution_=false;
+	lowres_update(work_area->get_low_resolution_flag());
+	changing_resolution_= false;
 }
+
 
 void
 CanvasView::increase_low_res_pixel_size()
 {
-	if(changing_resolution_)
+	if (changing_resolution_)
 		return;
-	changing_resolution_=true;
+	changing_resolution_= true;
 	list<int> sizes = CanvasView::get_pixel_sizes();
 	int pixel_size = work_area->get_low_res_pixel_size();
 	if (!work_area->get_low_resolution_flag())
@@ -3111,11 +3131,13 @@ CanvasView::increase_low_res_pixel_size()
 		// We were using "hi res" so change it to low res.
 		work_area->set_low_resolution_flag(true);
 		// Update the "toggle-low-res" action
-		Glib::RefPtr<Gtk::ToggleAction> action = Glib::RefPtr<Gtk::ToggleAction>::cast_dynamic(action_group->get_action("toggle-low-res"));
+		Glib::RefPtr<Gtk::ToggleAction> action = Glib::RefPtr<Gtk:
+			:ToggleAction>::cast_dynamic(action_group->get_action(
+				"toggle-low-res"));
 		action->set_active(true);
 		// Update the toggle low res button
-		resolutiondial->update_lowres(true);
-		changing_resolution_=false;
+		lowres_update(true);
+		changing_resolution_= false;
 		return;
 	}
 
@@ -3125,34 +3147,40 @@ CanvasView::increase_low_res_pixel_size()
 			iter++;
 			if (iter != sizes.end())
 			{
-				Glib::RefPtr<Gtk::Action> action = action_group->get_action(strprintf("lowres-pixel-%d", *iter));
-				action->activate(); // to make sure the radiobutton in the menu is updated too
+				Glib::RefPtr<Gtk::Action> action = action_group->get_action(
+					strprintf("lowres-pixel-%d", *iter));
+				action->activate();
+					// to make sure the radiobutton in the menu is updated too
 				work_area->set_low_resolution_flag(true);
 			}
 			break;
 		}
 	// Update the "toggle-low-res" action
-	Glib::RefPtr<Gtk::ToggleAction> action = Glib::RefPtr<Gtk::ToggleAction>::cast_dynamic(action_group->get_action("toggle-low-res"));
+	Glib::RefPtr<Gtk::ToggleAction> action = Glib::RefPtr<Gtk::ToggleAction>:
+		:cast_dynamic(action_group->get_action("toggle-low-res"));
 	action->set_active(work_area->get_low_resolution_flag());
 	// Update toggle low res button
-	resolutiondial->update_lowres(work_area->get_low_resolution_flag());
-	changing_resolution_=false;
+	lowres_update(work_area->get_low_resolution_flag());
+	changing_resolution_= false;
 }
+
 
 void
 CanvasView::toggle_low_res_pixel_flag()
 {
-	if(changing_resolution_)
+	if (changing_resolution_)
 		return;
-	changing_resolution_=true;
+	changing_resolution_= true;
 	work_area->toggle_low_resolution_flag();
 	// Update the toggle low res button
-	resolutiondial->update_lowres(work_area->get_low_resolution_flag());
+	lowres_update(work_area->get_low_resolution_flag());
 	// Update the "toggle-low-res" action
-	Glib::RefPtr<Gtk::ToggleAction> action = Glib::RefPtr<Gtk::ToggleAction>::cast_dynamic(action_group->get_action("toggle-low-res"));
+	Glib::RefPtr<Gtk::ToggleAction> action = Glib::RefPtr<Gtk::ToggleAction>:
+		:cast_dynamic(action_group->get_action("toggle-low-res"));
 	action->set_active(work_area->get_low_resolution_flag());
-	changing_resolution_=false;
+	changing_resolution_= false;
 }
+
 
 void
 CanvasView::update_quality()
@@ -4194,3 +4222,9 @@ CanvasView::update_ducks_toggles(Duck::Type mask)
 	angle_ducks->set_active((mask & Duck::TYPE_ANGLE)); 
 }
 
+
+void
+CanvasView::lowres_update(bool flag)
+{
+	use_lowres->set_active(flag);
+}

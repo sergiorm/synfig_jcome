@@ -289,11 +289,14 @@ private:
 	Gtk::ToggleToolButton *radius_ducks;
 	Gtk::ToggleToolButton *width_ducks;
 	Gtk::ToggleToolButton *angle_ducks;
+	Gtk::ToggleToolButton *use_lowres;
+	Gtk::ToolButton *decrease_res;
+	Gtk::ToolButton *increase_res;
 	Gtk::ToggleToolButton *show_grid;
 	Gtk::ToggleToolButton *snap_grid;
 	Gtk::ToggleToolButton *onion_skin;
-	Gtk::ToolButton *tool_render_button;
-	Gtk::ToolButton *tool_preview_button;
+	Gtk::ToolButton *render;
+	Gtk::ToolButton *preview;
 
 	bool toggling_show_grid;
 	bool toggling_snap_grid;
@@ -410,6 +413,20 @@ public:
 
 	Glib::SignalProxy0<void> signal_angle_ducks(){
 		return angle_ducks->signal_toggled();
+	}
+
+	void lowres_update(bool flag);
+
+	Glib::SignalProxy0<void> signal_increase_res(){
+		return increase_res->signal_clicked();
+	}
+
+	Glib::SignalProxy0<void> signal_decrease_res(){
+		return decrease_res->signal_clicked();
+	}
+
+	Glib::SignalProxy0<void> signal_use_lowres(){
+		return use_lowres->signal_toggled();
 	}
 
 
@@ -759,6 +776,7 @@ private:
 	bool on_key_release_event(GdkEventKey* event);
 	bool focused_widget_has_priority(Gtk::Widget * focused);
 
+	void update_lowres(bool flag);
 
 protected:
 	bool close_instance_when_safe();
