@@ -834,8 +834,8 @@ CanvasView::CanvasView(etl::loose_handle<Instance> instance,etl::handle<synfigap
 			+ framedial->size_request().height
 			+ statusbar->size_request().height;
 
-	w = (get_canvas()->rend_desc().get_w() + w) / 0.990;
-	h =	(get_canvas()->rend_desc().get_h() + h) / 0.995;
+	w = (get_canvas()->rend_desc().get_w() + w) * 0.995;
+	h = (get_canvas()->rend_desc().get_h() + h) * 0.995;
 		// 0.995 is factor of zoom to fit from studio::WorkArea::zoom_fit()
 
 	// Maximum size of canvas window
