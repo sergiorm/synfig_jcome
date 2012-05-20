@@ -1027,7 +1027,8 @@ CanvasView::create_time_bar()
 	);
 	framedial->signal_seek_prev_keyframe().connect(sigc::mem_fun(*canvas_interface().get(), &synfigapp::CanvasInterface::jump_to_prev_keyframe));
 	framedial->signal_seek_prev_frame().connect(sigc::bind(sigc::mem_fun(*canvas_interface().get(), &synfigapp::CanvasInterface::seek_frame), -1));
-	framedial->signal_play_pause().connect(sigc::mem_fun(*this, &studio::CanvasView::on_play_pause_pressed));
+	framedial->signal_play().connect(sigc::mem_fun(*this, &studio::CanvasView::on_play_pause_pressed));
+	framedial->signal_pause().connect(sigc::mem_fun(*this, &studio::CanvasView::on_play_pause_pressed));
 	framedial->signal_seek_next_frame().connect(sigc::bind(sigc::mem_fun(*canvas_interface().get(), &synfigapp::CanvasInterface::seek_frame), 1));
 	framedial->signal_seek_next_keyframe().connect(sigc::mem_fun(*canvas_interface().get(), &synfigapp::CanvasInterface::jump_to_next_keyframe));
 	framedial->signal_seek_end().connect(sigc::bind(sigc::mem_fun(*canvas_interface().get(), &synfigapp::CanvasInterface::seek_time), Time::end()));
@@ -1636,7 +1637,7 @@ CanvasView::init_menus()
 	}
 
 	action_group->add( Gtk::Action::create("play", Gtk::Stock::MEDIA_PLAY),
-		sigc::mem_fun(*this, &studio::CanvasView::play)
+		sigc::mem_fun(*this, &studio::CanvasView::on_play_pause_pressed)
 	);
 
 	action_group->add( Gtk::Action::create("dialog-flipbook", _("Preview Window")),
@@ -2467,21 +2468,6 @@ CanvasView::on_focus_out_event(GdkEventFocus*x)
 
 bool
 CanvasView::on_key_press_event(GdkEventKey* event)
-{
-	Gtk::Widget* focused_widget = get_focus();
-	if(focused_widget_has_priority(focused_widget))
-	{
-		if(focused_widget->event((GdkEvent*)event))
-		return true;
-	}
-	else if(Gtk::Window::on_key_press_event(event))
-		return true;
-	else return focused_widget->event((GdkEvent*)event);
-	return false;
-}
-
-bool
-CanvasView::on_key_release_event(GdkEventKey* event)
 {
 	Gtk::Widget* focused_widget = get_focus();
 	if(focused_widget_has_priority(focused_widget))
@@ -3344,7 +3330,6 @@ CanvasView::play()
 			return;
 		}
 	}
-	on_play_pause_pressed();
 	is_playing_=false;
 	time_adjustment().set_value(endtime);
 	time_adjustment().value_changed();
@@ -4187,28 +4172,17 @@ CanvasView::on_delete_event(GdkEventAny* event __attribute__ ((unused)))
 void
 CanvasView::on_play_pause_pressed()
 {
-	Gtk::IconSize iconsize=Gtk::IconSize::from_name("synfig-small_icon_16x16");
-	Gtk::Image *icon;
-	Gtk::Button *pause_button;
-	pause_button=framedial->get_play_button();
-	bool play_flag;
 	if(!is_playing())
 	{
-		icon = manage(new Gtk::Image(Gtk::StockID("synfig-animate_pause"),iconsize));
-		pause_button->set_relief(Gtk::RELIEF_NORMAL);
-		play_flag=true;
+		framedial->toggle_play_pause_button(is_playing());
+		play();
+		framedial->toggle_play_pause_button(true); // this call is to restore the play button after play reaches end time.
 	}
 	else
 	{
-		icon = manage(new Gtk::Image(Gtk::StockID("synfig-animate_play"),iconsize));
-		pause_button->set_relief(Gtk::RELIEF_NONE);
-		play_flag=false;
+		framedial->toggle_play_pause_button(is_playing());
+		stop();
 	}
-	pause_button->remove();
-	pause_button->add(*icon);
-	icon->set_padding(0, 0);
-	icon->show();
-	if(play_flag) play(); else stop();
 }
 
 void
